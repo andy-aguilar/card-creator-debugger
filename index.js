@@ -1,18 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     const cardContainer = document.getElementById("card-container")
     const makeCardForm = document.getElementById("make-card-form")
-    const baseURL = "http://localhost:3000/cards"
-
-    const renderCards = (cards) => {
-        cards.forEach(card => {
-            renderCard(card)
-        })
-    }
+    const baseURL = "http://localhost:3000/"
 
     const renderCard = (card) => {
-        let front = card.front
-            let back = card.back
-            let cardDiv = document.createElement("div")
+        let cardDiv = document.createElement("div")
             cardDiv.className = "flip-card"
             cardDiv.innerHTML = `
             <div class="flip-card-inner">
@@ -23,36 +15,38 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h1>${back}</h1>
                 </div>
             </div>`
-        cardContainer.append(cardDiv)
+    }
+
+    const renderCards = (cards) => {
+        cards.forEach(card => {
+            renderCard(card)
+        })
     }
 
     const fetchCards = () => {
         fetch(baseURL)
-        .then(resp => resp.json())
         .then(data => renderCards(data))
     }
 
     
     const handleSubmit = (e) => {
-        e.preventDefault()
 
-        configObj = {
+        let card = {
+            front: e.target.value,
+            back: e.target.value
+        }
+
+        let configObj = {
             method: "POST",
             headers:{
                 "content-type": "application/json",
                 "accept": "application/json"
             },
-            body: JSON.stringify({
-                front: e.target.front.value,
-                back: e.target.back.value
-            })
+            body: JSON.stringify(card)
         }
 
         fetch(baseURL, configObj)
-        .then(resp => resp.json())
-        .then(data => renderCard(data))
-
-        e.target.reset()
+        .then(data => console.log(data))
     }
             
     const handleClick = (e) => {
